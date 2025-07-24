@@ -1,15 +1,13 @@
 import json
 import logging as log
-
-import pandas as pd
-from dotenv import load_dotenv
-
-load_dotenv()
 import os
 from typing import Any, Dict, List, Union
 
+import pandas as pd
 import requests
+from dotenv import load_dotenv
 
+load_dotenv()
 log.basicConfig(
     level=log.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -44,7 +42,7 @@ def filter_by_date(df: pd.DataFrame, date: Union[str, pd.Timestamp]) -> pd.DataF
     return df[(df["Дата платежа"] >= month_start) & (df["Дата платежа"] <= target_date)]
 
 
-def view_cards_info(df: pd.DataFrame, date: Union[str, pd.Timestamp]) -> List[Dict[str, Union[str, int, float]]]:
+def view_cards_info(df: pd.DataFrame, date: Union[str, pd.Timestamp]) -> list[dict[str, Any]]:
     """Выводит данные по картам"""
     df = filter_by_date(df, date).copy()
     df["last_digits"] = df["Номер карты"].astype(str).str[-4:]
@@ -55,7 +53,7 @@ def view_cards_info(df: pd.DataFrame, date: Union[str, pd.Timestamp]) -> List[Di
     return total.to_dict(orient="records")
 
 
-def search_top(df: pd.DataFrame, date: Union[str, pd.Timestamp]) -> List[Dict[str, Union[str, int, float]]]:
+def search_top(df: pd.DataFrame, date: Union[str, pd.Timestamp]) -> list[dict[str, Any]]:
     """Собирает топ-5 операций по сумме платежа"""
     df = filter_by_date(df, date).copy()
     df["date"] = df["Дата платежа"].astype(str)
@@ -118,11 +116,13 @@ def view_stock_prices(settings: Dict[str, Any]) -> List[Dict[str, Union[str, flo
         else:
             results.append({"stock": stock, "price": None})
 
-    # print(json.dumps(results, indent=2))
+    #print(json.dumps(results, indent=2))
+    #закомиченно для избежания дублирования в основной функции
     return results
 
 
 if __name__ == "__main__":
+    # проверка работы функций в этом модуле
     excel_data = "../data/operations.xlsx"
     df = read_excel(excel_data)
     target_date = "2020-11-06"
