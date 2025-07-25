@@ -1,16 +1,19 @@
 import json
 import logging as log
 import math
-from typing import Any, Dict, List
-from src.utils import read_excel
-import pandas as pd
 import re
+from typing import Any, Dict, List
+
+import pandas as pd
+
+from src.utils import read_excel
 
 logger = log.getLogger(__name__)
 log.basicConfig(level=log.INFO)
 
 
 def get_transactions(month: str, excel_data: str):
+    """Собирает транзакции из файла в список словарей"""
     df = read_excel(excel_data)
     df["Дата платежа"] = pd.to_datetime(df["Дата платежа"], dayfirst=True)
     df_filtered = df[df["Дата платежа"].dt.strftime("%Y-%m") == month].copy()
@@ -20,9 +23,11 @@ def get_transactions(month: str, excel_data: str):
 
 
 def investment_bank(month: str, transactions: List[Dict[str, Any]], limit: int) -> float:
+    """Возвращает сумму, отложенную в Инвесткопилку"""
     logger.info(f"Начало расчета за месяц: {month}, лимит округления: {limit}")
 
     def calc_saving(t: Dict[str, Any]) -> float:
+        """Рассчитывает сумму"""
         date = t["date"]
         amount = t["amount"]
         if date.startswith(month):
@@ -39,6 +44,7 @@ def investment_bank(month: str, transactions: List[Dict[str, Any]], limit: int) 
 
 
 def find_phone_transactions(excel_file: str) -> str:
+    """Находит операции в файле, содержащие номер телефона в описании"""
     df = read_excel(excel_file)
 
     if df.empty:
