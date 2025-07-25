@@ -2,7 +2,7 @@ import functools
 import json
 import logging
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, Callable, Any
 
 import pandas as pd
 
@@ -10,12 +10,12 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
-def save_report_to_file(file=None):
+def save_report_to_file(file: Optional[str] = None) -> Callable:
     """Декоратор для записи отчета в файл"""
 
-    def decorator(func):
+    def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any   :
             result = func(*args, **kwargs)
 
             out_file = file
