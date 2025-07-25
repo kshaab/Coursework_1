@@ -67,7 +67,7 @@ def search_top(df: pd.DataFrame, date: Union[str, pd.Timestamp]) -> list[dict[st
 
 def view_exchange_rate(settings: Dict[str, Any]) -> List[Dict[str, Union[str, float, None]]]:
     """Выводит текущий курс валют, в зависимости от настроенных валют пользователя"""
-    result = []
+    result_list = []
     api_key = os.getenv("API_KEY_EXCHANGE")
     user_currencies = settings.get("user_currencies", [])
 
@@ -85,15 +85,15 @@ def view_exchange_rate(settings: Dict[str, Any]) -> List[Dict[str, Union[str, fl
 
     for currency in user_currencies:
         if currency not in rates:
-            result.append({"currency": currency, "rate": None})
+            result_list.append({"currency": currency, "rate": None})
             continue
         if currency == "RUB":
             rate = 1.00
         else:
             rate = round(rub_rate / rates[currency], 2)
-        result.append({"currency": currency, "rate": rate})
+        result_list.append({"currency": currency, "rate": rate})
 
-    return result
+    return result_list
 
 
 def view_stock_prices(settings: Dict[str, Any]) -> List[Dict[str, Union[str, float, None]]]:
@@ -124,10 +124,10 @@ def view_stock_prices(settings: Dict[str, Any]) -> List[Dict[str, Union[str, flo
 if __name__ == "__main__":
     # проверка работы функций в этом модуле
     excel_data = "../data/operations.xlsx"
-    df = read_excel(excel_data)
-    target_date = "2020-11-06"
-    result = view_cards_info(df, target_date)
-    top_operations = search_top(df, target_date)
+    read_data = read_excel(excel_data)
+    required_date = "2020-11-06"
+    result = view_cards_info(read_data, required_date)
+    top_operations = search_top(read_data, required_date)
     json_data = "../user_settings.json"
     read = read_json(json_data)
     for card in result:

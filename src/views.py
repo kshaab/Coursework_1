@@ -6,6 +6,9 @@ import pandas as pd
 
 from src.utils import read_excel, read_json, search_top, view_cards_info, view_exchange_rate, view_stock_prices
 
+excel_data = "../data/operations.xlsx"
+json_data = "../user_settings.json"
+
 
 def greeting() -> str:
     """Отображает приветствие в зависимости от времени суток"""
@@ -47,8 +50,6 @@ def view_homepage(date: str) -> Dict[str, Any]:
 
 
 if __name__ == "__main__":
-    excel_data = "../data/operations.xlsx"
-    json_data = "../user_settings.json"
     input_date = "2020-12-22 10:30:06"
     report = view_homepage(input_date)
     print(json.dumps(report, indent=2, ensure_ascii=False))
