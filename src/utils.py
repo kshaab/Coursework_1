@@ -116,8 +116,8 @@ def view_stock_prices(settings: Dict[str, Any]) -> List[Dict[str, Union[str, flo
         else:
             results.append({"stock": stock, "price": None})
 
-    # print(json.dumps(results, indent=2))
-    # закомиченно для избежания дублирования в основной функции
+    #print(json.dumps(results, indent=2))
+    #закомичено для избежания дублирования в основной функции views.py
     return results
 
 

@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 import pandas as pd
 import pytest
@@ -32,15 +32,15 @@ def mock_user_settings() -> Dict[str, Any]:
 @patch("src.views.view_exchange_rate")
 @patch("src.views.view_stock_prices")
 def test_view_homepage(
-    mock_stock_prices,
-    mock_exchange_rate,
-    mock_search_top,
-    mock_view_cards_info,
-    mock_read_json,
-    mock_read_excel,
-    mock_user_settings,
-    request,
-    mock_df,
+    mock_stock_prices: Mock,
+    mock_exchange_rate: Mock,
+    mock_search_top: Mock,
+    mock_view_cards_info: Mock,
+    mock_read_json: Mock,
+    mock_read_excel: Mock,
+    mock_user_settings: Mock,
+    request: Mock,
+    mock_df: pd.DataFrame,
 ) -> None:
     mock_df = request.getfixturevalue("mock_df")
     mock_read_excel.return_value = mock_df

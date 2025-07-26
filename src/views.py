@@ -29,7 +29,7 @@ def greeting() -> str:
 
 
 def view_homepage(date: str) -> Dict[str, Any]:
-    """Объединяет работу вспомогательных функций и возвращает JSON-ответ"""
+    """Объединяет работу вспомогательных функций из utils.py и возвращает JSON-ответ"""
     target_date = pd.to_datetime(date)
 
     df = read_excel(excel_data)
