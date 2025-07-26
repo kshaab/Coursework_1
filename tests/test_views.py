@@ -1,33 +1,36 @@
-import pytest
+from typing import Any, Dict
 from unittest.mock import patch
+
 import pandas as pd
+import pytest
+
 from src.views import view_homepage
 
 
 @pytest.fixture
-def mock_df():
+def mock_df() -> pd.DataFrame:
     return pd.DataFrame(
         {
-            "Дата платежа": pd.to_datetime(["2020-11-01", "2020-11-03", "2020-11-10"]),
-            "Сумма операции": [-100.0, -250.0, -50.0],
-            "Номер карты": ["*1234", "*5678", "*1234"],
-            "Категория": ["Супермаркеты", "Каршеринг", "Фастфуд"],
-            "Описание": ["Магнит", "Ситидрайв", "Mouse Tail"],
+            "Дата платежа": pd.to_datetime(["2020-12-01", "2020-12-03"]),
+            "Сумма операции": [-100.0, -250.0],
+            "Номер карты": ["*1234", "*5678"],
+            "Категория": ["Супермаркеты", "Фастфуд"],
+            "Описание": ["Магнит", "Mouse Tail"],
         }
     )
 
 
 @pytest.fixture
-def mock_user_settings():
+def mock_user_settings() -> Dict[str, Any]:
     return {"user_currencies": ["USD", "EUR"], "user_stocks": ["AAPL", "GOOG"]}
 
 
-@patch("src.utils.read_excel")
-@patch("src.utils.read_json")
-@patch("src.utils.view_cards_info")
-@patch("src.utils.search_top")
-@patch("src.utils.view_exchange_rate")
-@patch("src.utils.view_stock_prices")
+@patch("src.views.read_excel")
+@patch("src.views.read_json")
+@patch("src.views.view_cards_info")
+@patch("src.views.search_top")
+@patch("src.views.view_exchange_rate")
+@patch("src.views.view_stock_prices")
 def test_view_homepage(
     mock_stock_prices,
     mock_exchange_rate,
@@ -35,10 +38,11 @@ def test_view_homepage(
     mock_view_cards_info,
     mock_read_json,
     mock_read_excel,
-    mock_df,
     mock_user_settings,
-):
-
+    request,
+    mock_df,
+) -> None:
+    mock_df = request.getfixturevalue("mock_df")
     mock_read_excel.return_value = mock_df
     mock_read_json.return_value = mock_user_settings
 
@@ -53,8 +57,7 @@ def test_view_homepage(
 
     assert "greeting" in result
     assert result["greeting"] in ["Доброе утро", "Добрый день", "Добрый вечер", "Доброй ночи"]
-
-    assert result["cards"][0]["last_digits"] == "4556"
+    assert result["cards"][0]["last_digits"] == "3456"
     assert isinstance(result["top_transactions"], list)
     assert isinstance(result["currency_rates"], list)
     assert isinstance(result["stock_prices"], list)

@@ -7,7 +7,7 @@ from src.services import find_phone_transactions, get_transactions, investment_b
 from src.views import view_homepage
 
 
-def main():
+def main() -> None:
     """Объединяет работу модулей в единую программу"""
 
     try:

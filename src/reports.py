@@ -2,7 +2,7 @@ import functools
 import json
 import logging
 from datetime import datetime, timedelta
-from typing import Optional, Callable, Any
+from typing import Any, Callable, Optional
 
 import pandas as pd
 
@@ -15,7 +15,7 @@ def save_report_to_file(file: Optional[str] = None) -> Callable:
 
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> Any   :
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             result = func(*args, **kwargs)
 
             out_file = file

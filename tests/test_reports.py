@@ -1,14 +1,14 @@
-
-import pytest
-import pandas as pd
-from unittest.mock import mock_open, patch
 from datetime import datetime
+from unittest.mock import MagicMock, mock_open, patch
+
+import pandas as pd
+import pytest
 
 from src.reports import spending_by_category
 
 
 @pytest.fixture
-def df_transactions():
+def df_transactions() -> pd.DataFrame:
     return pd.DataFrame(
         {
             "Дата платежа": pd.to_datetime(
@@ -24,7 +24,7 @@ def df_transactions():
     )
 
 
-def test_spending_by_category_correct(df_transactions):
+def test_spending_by_category_correct(df_transactions: pd.DataFrame) -> None:
     report = spending_by_category(df_transactions, "транспорт", "2019-11-16")
     assert report["категория"] == "транспорт"
     assert report["трат всего"] == 350.0
@@ -33,14 +33,14 @@ def test_spending_by_category_correct(df_transactions):
     assert report["по"] == "2019-11-16"
 
 
-def test_spending_by_category_wrong_date(df_transactions, caplog):
+def test_spending_by_category_wrong_date(df_transactions: pd.DataFrame, caplog: pytest.LogCaptureFixture) -> None:
     report = spending_by_category(df_transactions, "транспорт", "16-11-2019")
     assert report == {}
     assert "Неверный формат даты" in caplog.text
 
 
 @patch("builtins.open", new_callable=mock_open)
-def test_spending_by_category_saves_to_file(mock_file, df_transactions):
+def test_spending_by_category_saves_to_file(mock_file: MagicMock, df_transactions: pd.DataFrame) -> None:
     with patch("src.reports.datetime") as mock_datetime:
         mock_datetime.now.return_value = datetime(2020, 1, 1)
         mock_datetime.strptime.side_effect = lambda *args, **kwargs: datetime.strptime(*args, **kwargs)

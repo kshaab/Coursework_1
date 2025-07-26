@@ -12,9 +12,9 @@ logger = log.getLogger(__name__)
 log.basicConfig(level=log.INFO)
 
 
-def get_transactions(month: str, excel_data: str):
+def get_transactions(month: str, excel_file: str) -> List[Dict[str, Any]]:
     """Собирает транзакции из файла в список словарей"""
-    df = read_excel(excel_data)
+    df = read_excel(excel_file)
     df["Дата платежа"] = pd.to_datetime(df["Дата платежа"], dayfirst=True)
     df_filtered = df[df["Дата платежа"].dt.strftime("%Y-%m") == month].copy()
     df_filtered["date"] = df_filtered["Дата платежа"].dt.strftime("%Y-%m-%d")
@@ -34,7 +34,7 @@ def investment_bank(month: str, transactions: List[Dict[str, Any]], limit: int) 
             rounded = math.ceil(amount / limit) * limit
             saved = rounded - amount
             logger.debug(f"Транзакция: {date}, сумма={amount}, округлено до {rounded}, отложено={saved}")
-            return saved
+            return float(saved)
         return 0.0
 
     savings = list(map(calc_saving, transactions))
@@ -75,8 +75,8 @@ def find_phone_transactions(excel_file: str) -> str:
 
 if __name__ == "__main__":
     excel_data = "../data/operations.xlsx"
-    transactions = get_transactions("2021-12", excel_data)
-    result = investment_bank("2021-12", transactions, 10)
+    transactions = get_transactions("2021-11", excel_data)
+    result = investment_bank("2021-11", transactions, 10)
     result_json = find_phone_transactions(excel_data)
     print(result_json)
     print(json.dumps(result, ensure_ascii=False, indent=2))

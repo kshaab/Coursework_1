@@ -1,4 +1,4 @@
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 
 @patch("builtins.print")
@@ -9,14 +9,14 @@ from unittest.mock import patch, MagicMock
 @patch("src.main.get_transactions")
 @patch("src.main.view_homepage")
 def test_main_success(
-    mock_view_homepage,
-    mock_get_transactions,
-    mock_investment_bank,
-    mock_find_phone_transactions,
-    mock_spending_by_category,
-    mock_read_excel,
-    mock_print,
-):
+    mock_view_homepage: MagicMock,
+    mock_get_transactions: MagicMock,
+    mock_investment_bank: MagicMock,
+    mock_find_phone_transactions: MagicMock,
+    mock_spending_by_category: MagicMock,
+    mock_read_excel: MagicMock,
+    mock_print: MagicMock,
+) -> None:
 
     mock_view_homepage.return_value = {"greeting": "Добрый день"}
     mock_get_transactions.return_value = [{"date": "2021-12-01", "amount": 100}]
